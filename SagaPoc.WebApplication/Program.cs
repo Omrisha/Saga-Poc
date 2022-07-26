@@ -35,13 +35,7 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", 5672, "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
         cfg.ConfigureEndpoints(context);
-        cfg.UseDelayedMessageScheduler();
     });
 });
 
@@ -51,6 +45,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+await using var scope = app.Services.CreateAsyncScope();
+await using var dbContext = scope.ServiceProvider.GetRequiredService<OrderSagaDbContext>();
+await dbContext.Database.EnsureCreatedAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
