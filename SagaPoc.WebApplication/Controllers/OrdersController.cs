@@ -8,10 +8,10 @@ namespace SagaPoc.WebApplication.Controllers
     [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
-        private readonly IRequestClient<SubmitOrder> _client;
+        private readonly IPublishEndpoint _client;
         private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(ILogger<OrdersController> logger, IRequestClient<SubmitOrder> client)
+        public OrdersController(ILogger<OrdersController> logger, IPublishEndpoint client)
         {
             _logger = logger;
             _client = client;
@@ -22,16 +22,12 @@ namespace SagaPoc.WebApplication.Controllers
         {
             _logger.LogInformation("Accept Order");
             
-            var response = await _client.GetResponse<OrderAccepted>(new
+            await _client.Publish<SubmitOrder>(new
             {
                 OrderDate = DateTime.UtcNow,
             });
 
-            return Ok(new
-            {
-                response.Message.CorrelationId,
-                response.Message.Timestamp
-            });
+            return Ok();
         }
     }
 }
