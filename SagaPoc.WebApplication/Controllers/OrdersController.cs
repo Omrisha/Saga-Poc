@@ -8,26 +8,27 @@ namespace SagaPoc.WebApplication.Controllers
     [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
-        private readonly IPublishEndpoint _client;
+        private readonly IRequestClient<OrderInoviced> _client;
         private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(ILogger<OrdersController> logger, IPublishEndpoint client)
+        public OrdersController(ILogger<OrdersController> logger, IRequestClient<OrderInoviced> client)
         {
             _logger = logger;
             _client = client;
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Submit()
         {
-            _logger.LogInformation("Accept Order");
+            _logger.LogInformation("Submit Order");
             
-            await _client.Publish<SubmitOrder>(new
+            var result = await _client.GetResponse<OrderPaymentResult>(new
             {
-                OrderDate = DateTime.UtcNow,
+                Timestamp = DateTime.UtcNow,
+                Amount = 500
             });
 
-            return Ok();
+            return Ok(result);
         }
     }
 }

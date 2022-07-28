@@ -14,6 +14,7 @@ namespace SagaPoc.Sagas.Mapping
     {
         protected override void Configure(EntityTypeBuilder<OrderSaga> entity, ModelBuilder model)
         {
+            entity.Property(x => x.CorrelationId);
             entity.Property(x => x.SubmitDate);
             entity.Property(x => x.AcceptDate);
             entity.Property(x => x.ShipDate);

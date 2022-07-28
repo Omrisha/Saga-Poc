@@ -19,8 +19,17 @@ namespace SagaPoc.Sagas
 
         public async Task Consume(ConsumeContext<OrderInoviced> context)
         {
+            if (context.MessageId.HasValue)
+                CorrelationId = context.MessageId.Value;
             InvoiceDate = context.Message.Timestamp;
             Amount = context.Message.Amount;
+
+            await context.RespondAsync<OrderPaymentResult>(new
+            {
+                CorrelationId = CorrelationId,
+                Timestame = InvoiceDate,
+                Amount = Amount
+            });
         }
     }
 }

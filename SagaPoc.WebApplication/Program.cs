@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using SagaPoc.Messages;
 using SagaPoc.PersistanceModel;
 using SagaPoc.Sagas;
 
@@ -36,6 +37,8 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.ConfigureEndpoints(context);
+        cfg.SendTopology.UseCorrelationId<SubmitOrder>(x => x.CorrelationId);
+        cfg.SendTopology.UseCorrelationId<OrderAccepted>(x => x.CorrelationId);
     });
 });
 

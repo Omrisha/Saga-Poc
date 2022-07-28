@@ -22,11 +22,23 @@ namespace SagaPoc.Sagas
         public async Task Consume(ConsumeContext<SubmitOrder> context)
         {
             SubmitDate = context.Message.OrderDate;
+
+            await context.RespondAsync<OrderStatusResult>(new
+            {
+                CorrelationId = CorrelationId,
+                Timestamp = SubmitDate
+            });
         }
 
         public async Task Consume(ConsumeContext<OrderAccepted> context)
         {
             AcceptDate = context.Message.Timestamp;
+
+            await context.RespondAsync<OrderStatusResult>(new
+            {
+                CorrelationId = CorrelationId,
+                Timestamp = SubmitDate
+            });
         }
         
         public async Task Consume(ConsumeContext<OrderShipped> context)
