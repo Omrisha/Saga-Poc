@@ -8,7 +8,7 @@ using SagaPoc.PersistanceModel;
 
 #nullable disable
 
-namespace SagaPoc.PersistanceModel.Migrations
+namespace SagaPoc.PersistanceModel.Migrations.OrderSagaDb
 {
     [DbContext(typeof(OrderSagaDbContext))]
     partial class OrderSagaDbContextModelSnapshot : ModelSnapshot
@@ -36,25 +36,6 @@ namespace SagaPoc.PersistanceModel.Migrations
                     b.HasKey("CorrelationId");
 
                     b.ToTable("OrderPaymentSaga");
-                });
-
-            modelBuilder.Entity("SagaPoc.Sagas.OrderSaga", b =>
-                {
-                    b.Property<Guid>("CorrelationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("AcceptDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ShipDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("SubmitDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("CorrelationId");
-
-                    b.ToTable("OrderSaga");
                 });
 #pragma warning restore 612, 618
         }

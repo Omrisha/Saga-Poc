@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SagaPoc.PersistanceModel.Migrations
+namespace SagaPoc.PersistanceModel.Migrations.OrderSagaDb
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialStateSaga : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,29 +21,12 @@ namespace SagaPoc.PersistanceModel.Migrations
                 {
                     table.PrimaryKey("PK_OrderPaymentSaga", x => x.CorrelationId);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "OrderSaga",
-                columns: table => new
-                {
-                    CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SubmitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AcceptDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ShipDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderSaga", x => x.CorrelationId);
-                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "OrderPaymentSaga");
-
-            migrationBuilder.DropTable(
-                name: "OrderSaga");
         }
     }
 }

@@ -16,7 +16,6 @@ namespace SagaPoc.PersistanceModel
         {
             get 
             { 
-                yield return new OrderSagaMap();
                 yield return new OrderPaymentSagaMap();
             }
         }
