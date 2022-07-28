@@ -12,6 +12,23 @@ services:
     depends_on:
       - mssql
       - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+  sagapoc.statemachineweb:
+    image: ${DOCKER_REGISTRY-}sagapocstatemachineweb
+    build:
+      context: .
+      dockerfile: SagaPoc.StateMachineWebApp/Dockerfile
+    ports:
+      - 8001:80
+      - 8801:443
+    depends_on:
+      - mssql
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
