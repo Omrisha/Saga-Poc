@@ -30,12 +30,14 @@ namespace SagaPoc.Sagas.StateMachine
                         Console.WriteLine("Submitted order.");
                     })
                     .TransitionTo(Submitted)
-                    .Publish(context => new OrderSubmittedEvent(context.Saga.CorrelationId)));
+                    .Publish(context => new OrderSubmittedEvent(context.Saga.CorrelationId) { Timestamp = DateTime.Now }));
 
             During(Submitted,
                 When(OrderAccepted)
                 .Then(x => Console.WriteLine("Order accepted."))
-                    .TransitionTo(Accepted));
+                    .TransitionTo(Accepted)
+                    .Publish(context => new OrderAcceptedEvent(context.Saga.CorrelationId) { Timestamp = DateTime.Now })
+                    .Finalize());
         }
 
         public Event<SubmitOrder> SubmitOrder { get; private set; }
