@@ -18,27 +18,9 @@ namespace SagaPoc.StateMachineWebApp.Controllers
         }
 
         [HttpGet]
-        [Route("submit")]
         public async Task<IActionResult> Submit()
         {
-            _logger.LogInformation("Submitting order state");
-
             await _submitOrderClient.Publish<SubmitOrder>(new 
-            {
-                CorrelationId = NewId.NextGuid(),
-                OrderDate = DateTime.Now
-            });
-
-            return Ok();
-        }
-
-        [HttpGet]
-        [Route("accept")]
-        public async Task<IActionResult> Accept()
-        {
-            _logger.LogInformation("Accepting order state");
-
-            await _submitOrderClient.Publish<OrderAccepted>(new
             {
                 OrderDate = DateTime.Now
             });

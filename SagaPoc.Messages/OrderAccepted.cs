@@ -9,6 +9,18 @@ namespace SagaPoc.Messages
 {
     public interface OrderAccepted : CorrelatedBy<Guid>
     {
-        DateTime Timestamp { get; }
+        DateTime Timestamp { get; set; }
+    }
+
+    public class OrderSubmittedEvent : OrderAccepted
+    {
+        public OrderSubmittedEvent(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+
+        public DateTime Timestamp { get; set; }
+
+        public Guid CorrelationId { get; }
     }
 }

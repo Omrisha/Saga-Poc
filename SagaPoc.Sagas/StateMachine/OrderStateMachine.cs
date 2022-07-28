@@ -18,23 +18,24 @@ namespace SagaPoc.Sagas.StateMachine
         {
             InstanceState(x => x.CurrentState);
 
-            Event(() => SubmitOrder, x => x.CorrelateById(context => context.Message.CorrelationId));
+            Event(() => SubmitOrder, x => x.CorrelateById(context => context.Message.CorrelationId)
+            .SelectId(x => NewId.NextGuid()));
             Event(() => OrderAccepted, x => x.CorrelateById(context => context.Message.CorrelationId));
 
             Initially(
                 When(SubmitOrder)
-                    .Then(x => x.Saga.OrderDate = x.Message.OrderDate)
-                    .TransitionTo(Submitted),
-                When(OrderAccepted)
-                    .TransitionTo(Accepted));
+                    .Then(x => 
+                    {
+                        x.Saga.OrderDate = x.Message.OrderDate;
+                        Console.WriteLine("Submitted order.");
+                    })
+                    .TransitionTo(Submitted)
+                    .Publish(context => new OrderSubmittedEvent(context.Saga.CorrelationId)));
 
             During(Submitted,
                 When(OrderAccepted)
+                .Then(x => Console.WriteLine("Order accepted."))
                     .TransitionTo(Accepted));
-
-            During(Accepted,
-                When(SubmitOrder)
-                    .Then(x => x.Saga.OrderDate = x.Message.OrderDate));
         }
 
         public Event<SubmitOrder> SubmitOrder { get; private set; }
